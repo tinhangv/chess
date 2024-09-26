@@ -3,19 +3,17 @@ Text Based Chess
 credits: Victor Kwok, Russel Reid
 """
 
-import PIL as Image
-import numpy as np 
-
 class Board:
   def __init__(self):
     self.blank = '  '
-    self.board = [[self.blank]*8]*8
+    self.board = [[self.blank for _ in range(8)] for _ in range(8)]
     self.CurrentPlayer = 'w'
     self.gameOver = False
     self.moveHistory = []
 
     #self.checkMate = False
-    #self.inCheck = {"w":False, "b":False}
+    self.inCheck = {"w":False, "b":False}
+    self.castled = {"w":False, "b":False}
 
   def __str__(self):
     #convert code representation of pieces into unicode chess pieces
@@ -80,8 +78,13 @@ class Board:
       if [c,d] not in self.RookMoves(a,b,color): return False
     if selectedPiece == 'B':
       if [c,d] not in self.BishopMoves(a,b,color): return False
-    # if selectedPiece == 'P':
-    #   if [c,d] not in self.PawnMoves(a,b,color): return False
+    if selectedPiece == 'P':
+      if [c,d] not in self.PawnMoves(a,b,color): return False
+    if selectedPiece == 'K':
+      if [c,d] not in self.KingMoves(a,b,color): return False
+
+    #check if move results in check
+
     return True
   
   def checkSquare(self,c,d,color):
@@ -93,25 +96,34 @@ class Board:
       append = True
     return append, stop
   
-  # def PawnMoves(self,a,b,color):
-  #   movesList = []
-  #   if color == 'w':
-  #     if a==1:
-  #       append, stop = self.checkSquare(3,b,color)
-  #       if append: movesList.append([3,b])
-  #     if a<7:
-  #       append, stop = self.checkSquare(a+1,b,color)
-  #       if append: movesList.append([a+1,b])
-    
-  #   if color == 'b':
-  #     if a==6:
-  #       append, stop = self.checkSquare(4,b,color)
-  #       if append: movesList.append([4,b])
-  #     if a>0:
-  #       append, stop = self.checkSquare(a-1,b,color)
-  #       if append: movesList.append([a-1,b])
+  def PawnMoves(self,a,b,color):
+    movesList = []
+    if color == 'w':
+      if a==1: #starting position
+        append, stop = self.checkSquare(3,b,color)
+        if append: movesList.append([3,b])
+      if a<7:
+        append, stop = self.checkSquare(a+1,b,color)
+        if append: movesList.append([a+1,b])
+  
+    if color == 'b':
+      if a==6: #starting position
+        append, stop = self.checkSquare(4,b,color)
+        if append: movesList.append([4,b])
+      if a>0:
+        append, stop = self.checkSquare(a-1,b,color)
+        if append: movesList.append([a-1,b])
+
+    #captures
+    #promotion
         
-  #   return movesList
+    return movesList
+  
+  def KingMoves(self,a,b,color):
+    movesList = []
+    #check all 8 adjacent squares
+    #castle
+    return movesList
   
   def BishopMoves(self,a,b,color):
     movesList = []
@@ -199,4 +211,5 @@ def main():
     print(board.history())
     print(board)
     
-main()
+if __name__ == "__main__":
+  main()

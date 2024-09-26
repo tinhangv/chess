@@ -1,8 +1,13 @@
 import pygame
 import sys
+from board import Board
 
 # Initialize Pygame
 pygame.init()
+
+#initialize board
+chessBoard = Board()
+chessBoard.newGame()
 
 # Set up the display window
 screen_width = 800  # Adjust this based on your image size
@@ -30,7 +35,13 @@ Qw = pygame.transform.scale(pygame.image.load('Qw.png'), (square_size, square_si
 Kb = pygame.transform.scale(pygame.image.load('Kb.png'), (square_size, square_size))
 Kw = pygame.transform.scale(pygame.image.load('Kw.png'), (square_size, square_size))
 
+selected_piece = None
+
 def draw_pieces():
+    # pieces = {"Pb": Pb}
+    # for i in range(7,-1, -1): 
+    #     for j in range(8):
+    #         screen.blit(pieces[chessBoard.board[i][j]], (j*square_size, i*square_size))
     screen.blit(Pw, (1*square_size, 0*square_size))
     screen.blit(Pw, (2*square_size, 0*square_size))
     screen.blit(Pw, (3*square_size, 0*square_size))
