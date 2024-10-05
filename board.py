@@ -10,6 +10,7 @@ class Board:
     self.CurrentPlayer = 'w'
     self.gameOver = False
     self.moveHistory = []
+    self.selectedPiece = None
 
     #self.checkMate = False
     self.inCheck = {"w":False, "b":False}
@@ -48,6 +49,14 @@ class Board:
       return "Moves Made: " + str(self.moveHistory)
     else:
       self.moveHistory.append(s)
+
+  def setSelectedPiece(self, a,b):
+    if (a,b) == (-1,-1):
+      self.selectedPiece = None
+    self.selectedPiece = (a,b)
+
+  def getSelectedPiece(self):
+    return self.selectedPiece
 
   def inputToCoordinates(self,move):
     b=(ord(move[0].lower())-97) 

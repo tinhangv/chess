@@ -38,24 +38,44 @@ Kw = pygame.transform.scale(pygame.image.load('Kw.png'), (square_size, square_si
 selected_piece = None
 
 def draw_pieces():
-    # pieces = {"Pb": Pb}
-    # for i in range(7,-1, -1): 
-    #     for j in range(8):
-    #         screen.blit(pieces[chessBoard.board[i][j]], (j*square_size, i*square_size))
-    screen.blit(Pw, (1*square_size, 0*square_size))
-    screen.blit(Pw, (2*square_size, 0*square_size))
-    screen.blit(Pw, (3*square_size, 0*square_size))
-    screen.blit(Pw, (4*square_size, 0*square_size))
+    pieces = {"Pb": Pb, "Pw": Pw, "Rb": Rb, "Rw": Rw, "Bb": Bb, "Bw": Bw, "Nb": Nb, "Nw": Nw, "Qb": Qb, "Qw": Qw, "Kb": Kb, "Kw": Kw}
+    for i in range(8): 
+        for j in range(8):
+            try:
+                screen.blit(pieces[chessBoard.board[7-i][j]], (j*square_size, i*square_size))
+            except KeyError:
+                pass
 
+def mouseClickHandler():
+    mouse_x, mouse_y = pygame.mouse.get_pos()
+    board_x = mouse_x // square_size
+    board_y = 7 - (mouse_y // square_size)
+
+    chessBoard.setSelectedPiece(board_y, board_x)
+    # if chessBoard.getSelectedPiece() == None:
+    #     chessBoard.setSelectedPiece(board_x, board_y)
+    # else:
+
+  
 # Game loop
 while True:
+    # Blit (draw) the chessboard image onto the window
+    screen.blit(chessboard_image, (0, 0))
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
 
-    # Blit (draw) the chessboard image onto the window
-    screen.blit(chessboard_image, (0, 0))
+        #detect mouse click
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            mouseClickHandler()
+
+    #highlight selected piece
+    selected_piece = chessBoard.getSelectedPiece()
+    if selected_piece is not None:
+        row, col = selected_piece
+        pygame.draw.rect(screen, (255, 0, 0), (col * square_size, (7 - row) * square_size, square_size, square_size), 3)
 
     # Draw pieces
     draw_pieces()
